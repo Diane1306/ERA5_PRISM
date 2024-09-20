@@ -5,7 +5,7 @@ import rasterio
 from os.path import isfile, join
 
 
-work_dir = '/home/mmfire/Diane/Ag_paper'
+work_dir = '/home/mmfire/Diane/Ag_paper/'
 
 for yl in range(43):
     DIR = work_dir + f'prism/data/tmax/{1981+yl}/'
