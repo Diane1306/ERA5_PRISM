@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import os
 
-# import rasterio
+import rasterio
 
 lat = np.array([49.9166666666664 - i * 0.0416666666667 for i in range(357)])
 lon = np.array([-105.0416666666507 + i * 0.0416666666667 for i in range(722)])
@@ -23,44 +23,33 @@ mon = np.delete(mon, [1154, 2615, 4076, 5537, 6998, 8459, 9920, 11381, 12842, 14
 day = np.array(dff.strftime('%-d')).astype(int)
 day = np.delete(day, [1154, 2615, 4076, 5537, 6998, 8459, 9920, 11381, 12842, 14303])
 
-# am = rasterio.open('PRISM_tmin_stable_4kmD2_19810101_bil.bil')
-# a = am.read()[0, :357, 479:1201]
-# mask = np.where(a>-1000, 1, 0)
+am = rasterio.open(work_dir + 'prism/data/tmin/1981/PRISM_tmin_stable_4kmD2_19810101_bil/PRISM_tmin_stable_4kmD2_19810101_bil.bil')
+a = am.read()[0, :357, 479:1201]
+mask = np.where(a>-1000, 1, 0)
 
-for yl in range(43):
-    tmin = np.load(work_dir + f'prism/mw_tmin/{1981 + yl}_tmin.npz')['tmin']
-    tmax = np.load(work_dir + f'prism/mw_tmax/{1981 + yl}_tmax.npz')['tmax']
-    prec = np.load(work_dir + f'prism/mw_prec/{1981 + yl}_prec.npz')['prec']
-    for i in range(y):
-        for j in range(x):
+for i in range(y):
+    for j in range(x):
+        if mask[i, j]:
             tminij = []
             tmaxij = []
             precij = []
-
-            if (1981 + yl) % 4:
+            for yl in range(43):
+                tmin = np.load(work_dir + f'prism/mw_tmin/{1981+yl}_tmin.npz')['tmin']
                 tminij.extend(tmin[:, i, j])
+                tmax = np.load(work_dir + f'prism/mw_tmax/{1981+yl}_tmax.npz')['tmax']
                 tmaxij.extend(tmax[:, i, j])
+                prec = np.load(work_dir + f'prism/mw_prec/{1981+yl}_prec.npz')['prec']
                 precij.extend(prec[:, i, j])
-            else:
-                tminij.extend(tmin[:59, i, j])
-                tminij.extend(tmin[60:, i, j])
-                tmaxij.extend(tmax[:59, i, j])
-                tmaxij.extend(tmax[60:, i, j])
-                precij.extend(prec[:59, i, j])
-                precij.extend(prec[60:, i, j])
-
             tminij = np.array(tminij)
+            tminij = np.delete(tminij, [1154, 2615, 4076, 5537, 6998, 8459, 9920, 11381, 12842])
             tmaxij = np.array(tmaxij)
+            tmaxij = np.delete(tmaxij, [1154, 2615, 4076, 5537, 6998, 8459, 9920, 11381, 12842])
             precij = np.array(precij)
+            precij = np.delete(precij, [1154, 2615, 4076, 5537, 6998, 8459, 9920, 11381, 12842])
 
-            tminij = tminij * (9.0 / 5.0) + 32.0
-            tmaxij = tmaxij * (9.0 / 5.0) + 32.0
 
-            f = open(work_dir + f'prism/GDD_input/{Lat[i, j]:.2f}_{Lon[i, j]:.2f}_1981-2023.txt', 'a')
-            if yl == 0:
-                f.write('YEAR,MONTH,DAY,MAX,MIN,PREC\n')
-
-            for k in range(365):
-                f.write(
-                    f'{year[yl * 365 + k]},{mon[yl * 365 + k]},{day[yl * 365 + k]},{tmaxij[k]:.1f},{tminij[k]:.1f},{precij[k]:.2f}\n')
+            f = open(work_dir + f'prism/GDD_input/{Lat[i, j]:.2f}_{Lon[i, j]:.2f}_1981-2023.txt', "a")
+            f.write('YEAR,MONTH,DAY,MAX,MIN,PREC\n')
+            for k in range(len(year)):
+                f.write(f'{year[k]}, {mon[k]}, {day[k]}, {tmaxij[k]:.1f}, {tminij[k]:.1f}, {precij[k]:.2f}\n')
             f.close()
