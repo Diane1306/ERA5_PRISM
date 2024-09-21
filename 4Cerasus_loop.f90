@@ -260,7 +260,7 @@ PROGRAM MAIN
 !    OPEN(13,FILE='output_yearly_list_test.txt',STATUS='OLD')
     do i=1,100000000
         read(11, *)inputfile
-        input = "/home/mmfire/Diane/Ag_paper/GDD/GDD_input/"//inputfile
+        input = "/home/mmfire/Diane/Ag_paper/GDD/GDD_inputdata/"//inputfile
         read(12, *)outputfile1
         output1 = "/home/mmfire/Diane/Ag_paper/GDD/GDD_output/daily/"//outputfile1
 !        output1 = "zz_"//outputfile1
