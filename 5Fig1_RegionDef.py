@@ -6,12 +6,19 @@ import cartopy
 from matplotlib.colors import LinearSegmentedColormap
 from matplotlib.ticker import MaxNLocator
 from matplotlib.colors import BoundaryNorm
+import matplotlib as mpl
+mpl.rc("savefig", dpi=300)
+# plt.rcParams["font.family"] = "Times New Roman"
 
 lat = np.array([49.9166666666664 - i * 0.0416666666667 for i in range(357)])
 lon = np.array([-105.0416666666507 + i * 0.0416666666667 for i in range(722)])
 Lon, Lat = np.meshgrid(lon, lat)
 
 work_dir = '/home/mmfire/Diane/Ag_paper/'
+
+# Set the path to the directory containing the downloaded shapefiles
+cartopy.config['data_dir'] = '/home/mmfire/Diane/Ag_paper/shapefiles'  # Change to your directory
+
 
 states = ['MI', 'ND', 'SD', 'NE', 'KS', 'OK', 'MN', 'IA', 'MO', 'WI', 'IL', 'IN', 'OH', 'KY', 'WV', 'PA', 'AR', 'TN', 'NY', 'MD', 'VA', 'NC']
 mdmask = {states[ii]:np.load(work_dir + f'var/{states[ii]}_mask.npy') for ii in range(22)}
@@ -28,12 +35,13 @@ data = [np.where(NWmask, 1, np.nan), np.where(SWmask, 2, np.nan), np.where(NCmas
         np.where(NEmask, 5, np.nan), np.where(SEmask, 6, np.nan), np.where(cherrymask, 7, np.nan)]
 
 fig = plt.figure(figsize=(8, 8))
-extent = [-105, -75, 34, 49]
+# extent = [-105, -75, 34, 49]
+extent = [-120, -70, 23.3, 50.5]
 ax = plt.axes(projection=ccrs.AlbersEqualArea(np.mean(extent[:2]), np.mean(extent[2:])))
 ax.set_extent(extent)
-states = NaturalEarthFeature(category="cultural", scale="50m",
+states = NaturalEarthFeature(category="cultural", scale="10m",
                              facecolor="none",
-                             name="admin_1_states_provinces_shp")
+                             name="admin_1_states_provinces")
 ax.add_feature(states, linewidth=.3, edgecolor="black")
 ax.add_feature(cartopy.feature.BORDERS, lw=.3, linestyle=':')
 ax.add_feature(cartopy.feature.COASTLINE, lw=.3, linestyle=':')
@@ -55,5 +63,5 @@ cb_ax = fig.add_axes([0.905, 0.2, 0.02, 0.55])
 cbar = fig.colorbar(pc, cax=cb_ax, ticks=np.arange(1.5, 8))
 region = ['Northern Great Plains', 'Southern Great Plains', 'Upper Midwest', 'Ohio Valley', 'NY-PA', 'VA-NC', 'Cherry Yield Counties']
 cbar.ax.set_yticklabels(region, fontweight='bold')
-plt.savefig(work_dir + 'plot/AgPaper/1Region_Definition.png', bbox_inches='tight')
+plt.savefig(work_dir + 'plot/1Region_Definition.png', bbox_inches='tight')
 plt.close()
