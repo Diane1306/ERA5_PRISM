@@ -59,6 +59,16 @@ for i in range(9):
     pc.append(plt.pcolormesh(Lon, Lat, data[i], cmap=cmap, norm=norm, transform=ccrs.PlateCarree()))
 
     ax.text(.01, 1.03, title[i], fontsize=16, fontweight='bold', horizontalalignment='left', transform=ax.transAxes)
+
+for ax in axs.flat:  # Loop through all axes objects
+    ax.set_xticks([])  # Remove x-axis ticks
+    ax.set_yticks([])
+    # Hide the right and top spines
+    ax.spines['right'].set_visible(False)
+    ax.spines['left'].set_visible(False)
+    ax.spines['top'].set_visible(False)
+    ax.spines['bottom'].set_visible(True)  # Ensure only the bottom spine is visible
+
 plt.subplots_adjust(bottom=0.02, top=.98, left=0.02, right=.98,
                     wspace=0.005, hspace=0.1)
 i = 0
@@ -66,20 +76,24 @@ cb_ax = fig.add_axes([.005, 0.345, 0.01, 0.64])
 cbar = fig.colorbar(pc[i], cax=cb_ax, ticks=np.arange(ll[i], lr[i] + step[i], step[i]), extend='max')
 cb_ax.yaxis.set_ticks_position('left')
 cb_ax.tick_params(labelsize=15)
+cb_ax.tick_params(axis='y', which='minor', length=0)  # Remove minor ticks
 i = 2
 cb_ax = fig.add_axes([0.985, .02, 0.01, 0.96])
 cbar = fig.colorbar(pc[i], cax=cb_ax, ticks=np.arange(ll[i], lr[i] + step[i], step[i]), extend='both')
 cb_ax.tick_params(labelsize=15)
+cb_ax.tick_params(axis='y', which='minor', length=0)  # Remove minor ticks
 i = 6
 cb_ax = fig.add_axes([0.005, .02, 0.01, 0.32])
 cbar = fig.colorbar(pc[i], cax=cb_ax, ticks=np.arange(ll[i], lr[i] + step[i], step[i]), extend='max')
 cb_ax.yaxis.set_ticks_position('left')
 cb_ax.tick_params(labelsize=15)
+cb_ax.tick_params(axis='y', which='minor', length=0)  # Remove minor ticks
 i = 7
 cb_ax = fig.add_axes([0.34, .005, 0.32, 0.01])
 cbar = fig.colorbar(pc[i], cax=cb_ax, ticks=np.arange(ll[i], lr[i] + step[i], step[i]), extend='max',
                     orientation="horizontal")
 cb_ax.tick_params(labelsize=15)
+cb_ax.tick_params(axis='x', which='minor', length=0)  # Remove minor ticks
 
 plt.savefig(work_dir + 'plot/2SpringDates.png', bbox_inches='tight')
 plt.close()
