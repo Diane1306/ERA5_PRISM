@@ -22,8 +22,6 @@ TminStage = np.load(work_dir + 'var/Cherry_TminStage.npy')
 DamDateStage = np.load(work_dir + 'var/Cherry_DamDateStage.npy')
 TminDamStage = np.load(work_dir + 'var/Cherry_TminDamStage.npy')
 
-
-
 DamDayann_slope = np.zeros((y, x)) * np.nan
 stage_slope = np.zeros((5, 9, y, x)) * np.nan
 stage_data = [DamDayStage, DamMeanStage, TminStage, DamDateStage, TminDamStage]
