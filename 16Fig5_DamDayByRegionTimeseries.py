@@ -36,31 +36,31 @@ region = ['Northern Great Plains', 'Southern Great Plains', 'Upper Midwest', 'Oh
 
 len_year = 43
 DamDayann = np.load(work_dir + f'var/Cherry_DamDayann.npy')
-DamDayann_states = np.zeros((len_year, 6))
+DamDayann_states = np.zeros((len_year, len(mdmask_sub)))
 for yl in range(len_year):
     DamDayann_states[yl, :] = np.array(
         [np.nanmean(np.where(mdmask_sub[ii], DamDayann[yl, :, :], np.nan)) for ii in range(len(mdmask_sub))])
 
 X = np.linspace(1981, 2023, len_year)
 slope = []
-for ri in range(6):
+for ri in range(len(mdmask_sub)):
     flag = ~np.isnan(DamDayann_states[:, ri])
     if len(X[flag]):
         r = stats.theilslopes(DamDayann_states[:, ri][flag], X[flag], alpha=0.95)
         slope.append(r[0])
 
-fig, axs = plt.subplots(3, 2, sharex=True, sharey=True, figsize=(12, 7))
-for i in range(6):
-    ax = plt.subplot(3, 2, i + 1)
+fig, axs = plt.subplots(4, 2, sharex=True, sharey=True, figsize=(12, 9))
+for i in range(len(mdmask_sub)):
+    ax = plt.subplot(4, 2, i + 1)
     plt.plot(X, DamDayann_states[:, i], 'bo-', ms=3)
     plt.ylim(0, 10)
     ax.text(.01, .9, f'mean = {np.nanmean(DamDayann_states[:, i]):.2f}', fontsize=15, transform=ax.transAxes)
     ax.text(.01, .8, f'std = {np.nanstd(DamDayann_states[:, i]):.2f}', fontsize=15, transform=ax.transAxes)
-    ax.text(.01, .7, f'trend = {slope[i]:.2f} (p={pvalue[i]:.4f})', fontsize=15, transform=ax.transAxes)
+    ax.text(.01, .7, f'trend = {slope[i]:.2f}', fontsize=15, transform=ax.transAxes)
     ax.text(.99, .9, f'{region[i]}', fontsize=16, fontweight='bold', horizontalalignment='right',
             transform=ax.transAxes)
     #     plt.grid()
-    plt.vlines(np.arange(1981, 2021, 4), 0, 10, alpha=0.5, linestyles='dashed', colors='grey')
+    plt.vlines(np.arange(1981, 2024, 4), 0, 10, alpha=0.5, linestyles='dashed', colors='grey')
     plt.subplots_adjust(wspace=.06)
     if i % 2:
         plt.yticks(np.arange(0, 11, 2), [])
@@ -68,15 +68,15 @@ for i in range(6):
         plt.yticks(np.arange(0, 11, 2), fontsize=14)
         plt.ylabel('Damage Days', fontsize=15)
 
-    if i < 4:
-        plt.xticks(np.arange(1981, 2021, 4), [])
+    if i < 5:
+        plt.xticks(np.arange(1981, 2024, 4), [])
     else:
-        plt.xticks(np.arange(1981, 2021, 1), ['81', '', '', '', '85', '', '', '', '89', '', '', '', '93', '', '', '',
+        plt.xticks(np.arange(1981, 2024, 1), ['81', '', '', '', '85', '', '', '', '89', '', '', '', '93', '', '', '',
                                               '97', '', '', '', '01', '', '', '', '05', '', '', '', '09', '', '', '',
-                                              '13', '', '', '', '17', '', '', ''], fontsize=14)
+                                              '13', '', '', '', '17', '', '', '', '21', '', ''], fontsize=14)
         #         plt.xticks(np.arange(1981, 2021, 4), fontsize=14)
         plt.xlabel('Year', fontsize=15)
 plt.subplots_adjust(bottom=0.02, top=.98, left=0.02, right=.98,
                     wspace=0.005, hspace=0.07)
-plt.savefig('./plot/AgPaper/DamDayByRegionTimeSeries.png', bbox_inches='tight')
+plt.savefig(work_dir + 'plot/5DamDayByRegionTimeSeries.png', bbox_inches='tight')
 plt.close()
