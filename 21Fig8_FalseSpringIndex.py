@@ -43,9 +43,9 @@ skewness = skew(sdd, axis=0)
 
 extent = [-105, -75, 34, 49]
 fsidata = [fsi1, fsi3]
-title = ['(a) 1 damage days after side green date', '(b) 3 damage days after side green date', '(c) Skewness of Side Green Day']
+title = ['(a) 1 damage days after Side Green Day', '(b) 3 damage days after Side Green Day', '(c) Skewness of Side Green Day']
 yr = 16
-fig, axes = plt.subplots(3, 1, figsize=(5, 10))
+fig, axes = plt.subplots(3, 1, figsize=(5.5, 10))
 pc = []
 for i in range(3):
     ax = plt.subplot(3, 1, i+1, projection=ccrs.AlbersEqualArea(np.mean(extent[:2]), np.mean(extent[2:])))
@@ -76,7 +76,7 @@ for ax in axes.flat:  # Loop through all axes objects
     ax.spines['right'].set_visible(False)
     ax.spines['left'].set_visible(False)
     ax.spines['top'].set_visible(False)
-    ax.spines['bottom'].set_visible(True)  # Ensure only the bottom spine is visible
+    ax.spines['bottom'].set_visible(False)  # Ensure only the bottom spine is visible
 
 plt.subplots_adjust(bottom=0.02, top=.98, left=0.02, right=.98, wspace=0.005, hspace=0.1)
 i = 0
@@ -86,7 +86,7 @@ cb_ax.tick_params(labelsize=15)
 cb_ax.tick_params(axis='y', which='minor', length=0)  # Remove minor ticks
 i = 2
 cb_ax = fig.add_axes([0.985, .02, 0.02, 0.31])
-cbar = fig.colorbar(pc[i], cax=cb_ax, ticks=np.arange(-1, 1.1, .2), extend='both')
+cbar = fig.colorbar(pc[i], cax=cb_ax, ticks=np.arange(-1, 1.1, .5), extend='both')
 cb_ax.tick_params(labelsize=15)
 cb_ax.tick_params(axis='y', which='minor', length=0)  # Remove minor ticks
 
