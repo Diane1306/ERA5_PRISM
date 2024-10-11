@@ -21,15 +21,16 @@ cartopy.config['data_dir'] = '/home/mmfire/Diane/Ag_paper/shapefiles'  # Change 
 
 states = ['MI', 'ND', 'SD', 'NE', 'KS', 'OK', 'MN', 'IA', 'MO', 'WI', 'IL', 'IN', 'OH', 'KY', 'WV', 'PA', 'AR', 'TN', 'NY', 'MD', 'VA', 'NC']
 mdmask = {states[ii]:np.load(work_dir + f'var/{states[ii]}_mask.npy') for ii in range(22)}
+cherrymask = np.load(work_dir + 'var/Cherry_mask.npy')
 
 NWmask = np.where(np.logical_or.reduce((mdmask['ND'], mdmask['SD'], mdmask['NE'])), 1, 0)
 SWmask = np.where(np.logical_or.reduce((mdmask['KS'], mdmask['OK'], mdmask['AR'])), 1, 0)
 NCmask = np.where(np.logical_or.reduce((mdmask['MN'], mdmask['IA'], mdmask['WI'], mdmask['MI'])), 1, 0)
 Cmask = np.where(np.logical_or.reduce((mdmask['MO'], mdmask['IL'], mdmask['IN'], mdmask['OH'], mdmask['KY'], mdmask['TN'], mdmask['WV'])), 1, 0)
-NYmask = np.where(mdmask['NY'], 1, 0)
-PAmask = np.where(mdmask['PA'], 1, 0)
-WImask = np.where(mdmask['WI'], 1, 0)
-MImask = np.where(mdmask['MI'], 1, 0)
+NYmask = np.where(np.logical_or.reduce((mdmask['NY'], cherrymask)), 1, 0)
+PAmask = np.where(np.logical_or.reduce((mdmask['PA'], cherrymask)), 1, 0)
+WImask = np.where(np.logical_or.reduce((mdmask['WI'], cherrymask)), 1, 0)
+MImask = np.where(np.logical_or.reduce((mdmask['MI'], cherrymask)), 1, 0)
 
 mdmask_sub = [NWmask, SWmask, NCmask, Cmask, NYmask, PAmask, WImask, MImask]
 region = ['Northern Great Plains', 'Southern Great Plains', 'Upper Midwest', 'Ohio Valley', 'NY', 'PA', 'WI', 'MI']
@@ -117,5 +118,5 @@ for i in range(len(mdmask_sub)):
 
 plt.subplots_adjust(bottom=0.02, top=.98, left=0.02, right=.98,
                     wspace=0.005, hspace=0.12)
-plt.savefig(work_dir + 'plot/6b_DamDateTmin.png', bbox_inches='tight')
+plt.savefig(work_dir + 'plot/6b_DamDateTmin_CherryYieldCountyInState.png', bbox_inches='tight')
 plt.close()
