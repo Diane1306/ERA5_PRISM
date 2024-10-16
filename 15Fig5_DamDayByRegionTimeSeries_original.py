@@ -65,7 +65,7 @@ for i in range(len(mdmask_sub)):
         plt.yticks(np.arange(0, 11, 2), fontsize=14)
         plt.ylabel('Damage Days', fontsize=15)
 
-    if i < 5:
+    if i < 4:
         plt.xticks(np.arange(1981, 2024, 4), [])
     else:
         plt.xticks(np.arange(1981, 2024, 1), ['81', '', '', '', '85', '', '', '', '89', '', '', '', '93', '', '', '',

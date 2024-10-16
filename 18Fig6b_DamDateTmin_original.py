@@ -105,10 +105,10 @@ for i in range(len(mdmask_sub)):
 
     ax.text(.99, .9, f'{region[i]}', fontsize=16, fontweight='bold', horizontalalignment='right',
             transform=ax.transAxes)
-    if i == 6:
+    if i == 4:
         ax.legend(loc='upper left', fontsize=15, frameon=False)
         ax.set_xlabel('Phenological Stages', fontsize=15)
-    if i == 7:
+    if i == 5:
         axx.legend(loc='upper left', fontsize=15, frameon=False)
         ax.set_xlabel('Phenological Stages', fontsize=15)
 

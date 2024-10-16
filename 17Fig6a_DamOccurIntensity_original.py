@@ -103,10 +103,10 @@ for i in range(len(mdmask_sub)):
         axx.set_yticks([0.0, 0.2, 0.4, 0.6, 0.8, 1.0])
         axx.set_yticklabels([0.0, 0.2, 0.4, 0.6, 0.8, 1.0], fontsize=15, color='green')
         axx.set_ylabel('Damage percent', fontsize=15)
-    if i == 6:
+    if i == 4:
         ax.legend(loc='upper left', fontsize=15, frameon=False)
         ax.set_xlabel('Phenological Stages', fontsize=15)
-    if i == 7:
+    if i == 5:
         axx.legend(loc='upper left', fontsize=15, frameon=False)
         ax.set_xlabel('Phenological Stages', fontsize=15)
 
