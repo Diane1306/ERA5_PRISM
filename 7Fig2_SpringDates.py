@@ -19,18 +19,22 @@ cartopy.config['data_dir'] = '/home/mmfire/Diane/Ag_paper/shapefiles'  # Change 
 var_mean = np.load(work_dir + 'var/var_yearly_Cherry.npy')
 var_std = np.load(work_dir + 'var/var_std_Cherry.npy')
 var_slope = np.load(work_dir + 'var/var_yearly_slope_Cherry.npy')
-
+var_pvalue = np.load(work_dir + 'var/var_yearly_pvalue_Cherry.npy')
 
 data = []
+pvalue = []
 data.append(var_mean[0, :, :])
 data.append(var_std[0, :, :])
 data.append(var_slope[0, :, :])
+pvalue.append(var_pvalue[0, :, :])
 data.append(var_mean[1, :, :])
 data.append(var_std[1, :, :])
 data.append(var_slope[1, :, :])
+pvalue.append(var_pvalue[1, :, :])
 data.append(var_mean[4, :, :])
 data.append(var_std[4, :, :])
 data.append(var_slope[4, :, :])
+pvalue.append(var_pvalue[4, :, :])
 
 extent = [-105, -75, 34, 49]
 fig, axs = plt.subplots(3, 3, figsize=(15, 10))
@@ -57,7 +61,9 @@ for i in range(9):
     norm = BoundaryNorm(levels, ncolors=cmap.N, clip=True)
 
     pc.append(plt.pcolormesh(Lon, Lat, data[i], cmap=cmap, norm=norm, transform=ccrs.PlateCarree()))
-
+    if i % 3 == 2:
+        plt.scatter(Lon, Lat, np.where(pvalue[int((i - 2) / 3)] < 0.05, 1, np.nan), 'grey', alpha=.1,
+                    transform=ccrs.PlateCarree())
     ax.text(.01, 1.03, title[i], fontsize=16, fontweight='bold', horizontalalignment='left', transform=ax.transAxes)
 
 for ax in axs.flat:  # Loop through all axes objects
