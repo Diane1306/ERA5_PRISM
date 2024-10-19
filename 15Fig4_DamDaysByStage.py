@@ -56,7 +56,7 @@ for ax in axs.flat:  # Loop through all axes objects
     ax.spines['right'].set_visible(False)
     ax.spines['left'].set_visible(False)
     ax.spines['top'].set_visible(False)
-    ax.spines['bottom'].set_visible(True)  # Ensure only the bottom spine is visible
+    ax.spines['bottom'].set_visible(False)  # Ensure only the bottom spine is visible
 
 plt.subplots_adjust(bottom=0.02, top=.98, left=0.02, right=.98,
                     wspace=0.005, hspace=0.1)
