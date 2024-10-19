@@ -62,7 +62,7 @@ for i in range(9):
 
     pc.append(plt.pcolormesh(Lon, Lat, data[i], cmap=cmap, norm=norm, transform=ccrs.PlateCarree()))
     if i % 3 == 2:
-        plt.scatter(Lon, Lat, np.where(pvalue[int((i - 2) / 3)] < 0.05, 1, np.nan), 'grey', alpha=.1,
+        plt.scatter(Lon, Lat, np.where(pvalue[int((i - 2) / 3)] < 0.05, 1, np.nan), 'grey', alpha=.07,
                     transform=ccrs.PlateCarree())
     ax.text(.01, 1.03, title[i], fontsize=16, fontweight='bold', horizontalalignment='left', transform=ax.transAxes)
 
