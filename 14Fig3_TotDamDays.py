@@ -37,9 +37,9 @@ pvalue.append(DamDayann_pvalue)
 
 extent = [-105, -75, 34, 49]
 fig, axs = plt.subplots(3, 2, figsize=(10, 10))
-ll = [0, 0, 0, 0, -.016, -.16]
-lr = [1, 4, .5, 4, .016, .16]
-step = [.2, 1, .1, 1, .008, .08]
+ll = [0, 0, 0, 0, -.01, -.1]
+lr = [1, 4, .5, 4, .01, .1]
+step = [.2, 1, .1, 1, .005, .05]
 title = ['(a) buds remaining fraction mean', '(b) damage days mean', '(c) buds remaining fraction std',
          '(d) damage days std',
          '(e) buds remaining fraction trend', '(f) damage days trend']
