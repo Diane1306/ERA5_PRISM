@@ -2,6 +2,7 @@ import numpy as np
 import rasterio
 from scipy import stats
 import pandas as pd
+import pymannkendall as mk
 
 lat = np.array([49.9166666666664 - i * 0.0416666666667 for i in range(357)])
 lon = np.array([-105.0416666666507 + i * 0.0416666666667 for i in range(722)])
@@ -16,7 +17,7 @@ am = rasterio.open(work_dir + 'prism/data/tmin/1981/PRISM_tmin_stable_4kmD2_1981
 a = am.read()[0, :357, 479:1201]
 mask = np.where(a>-1000, 1, 0)
 
-len_year = 43
+len_year = 40
 tmax_std = np.zeros((len_year, y, x)) * np.nan
 tmin_std = np.zeros((len_year, y, x)) * np.nan
 for i in range(y):
@@ -35,6 +36,7 @@ np.save(work_dir + 'var/spring_tmax_std', tmax_std)
 np.save(work_dir + 'var/spring_tmin_std', tmin_std)
 
 slope = np.zeros((2, y, x)) * np.nan
+pvalue = np.zeros((2, y, x)) * np.nan
 X = np.linspace(1, len_year, len_year)
 data = [tmax_std, tmin_std]
 for i in range(y):
@@ -44,4 +46,8 @@ for i in range(y):
                 r = stats.theilslopes(data[vi][:, i, j], X, alpha=0.95)
                 slope[vi, i, j] = r[0]
 
+                result = mk.original_test(data[vi][:, i, j])
+                pvalue[vi, i, j] = result.p
+
 np.save(work_dir + 'var/spring_input_Tstd_slope', slope)
+np.save(work_dir + 'var/spring_input_Tstd_pvalue', pvalue)
