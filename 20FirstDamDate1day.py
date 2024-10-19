@@ -15,14 +15,15 @@ lat = np.array([49.9166666666664 - i * 0.0416666666667 for i in range(357)])
 lon = np.array([-105.0416666666507 + i * 0.0416666666667 for i in range(722)])
 Lon, Lat = np.meshgrid(lon, lat)
 
-len_year = 43
+len_year = 40
 si = np.zeros((len_year, y, x)) * np.nan
 for i in range(y):
     for j in range(x):
         if mask[i, j]:
             dfy = pd.read_table(work_dir + f'GDD/GDD_output/yearly/{Lat[i, j]:.2f}_{Lon[i, j]:.2f}_yearly.txt', sep='\s+',
                                    names=('year','sidegreen','bloom','pdays','yield'))
-            si[:, i, j] = (dfy['sidegreen'] - min(dfy['sidegreen']))/ (max(dfy['sidegreen']) - min(dfy['sidegreen']))
+            sddate = dfy['sidegreen'][:len_year]
+            si[:, i, j] = (sddate - min(sddate))/ (max(sddate) - min(sddate))
 np.save(work_dir + 'var/Cherry_sidegreen_norm', si)
 
 FirstDamDate = np.zeros((len_year, y, x)) * np.nan
