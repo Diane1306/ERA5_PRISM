@@ -1,6 +1,7 @@
 import numpy as np
 import rasterio
 from scipy import stats
+import pymannkendall as mk
 
 work_dir = '/home/mmfire/Diane/Ag_paper/'
 
@@ -23,7 +24,9 @@ DamDateStage = np.load(work_dir + 'var/Cherry_DamDateStage.npy')
 TminDamStage = np.load(work_dir + 'var/Cherry_TminDamStage.npy')
 
 DamDayann_slope = np.zeros((y, x)) * np.nan
+DamDayann_pvalue = np.zeros((y, x)) * np.nan
 stage_slope = np.zeros((5, 9, y, x)) * np.nan
+stage_pvalue = np.zeros((5, 9, y, x)) * np.nan
 stage_data = [DamDayStage, DamMeanStage, TminStage, DamDateStage, TminDamStage]
 
 len_year = 40
@@ -33,17 +36,25 @@ for i in range(y):
         if mask[i, j]:
             r = stats.theilslopes(np.nan_to_num(DamDayann[:, i, j]), X, alpha=0.95)
             DamDayann_slope[i, j] = r[0]
+            result = mk.original_test(np.nan_to_num(DamDayann[:, i, j]))
+            DamDayann_pvalue[i, j] = result.p
 
             for di in range(5):
                 for si in range(9):
                     if di < 3:
                         r = stats.theilslopes(np.nan_to_num(stage_data[di][:, si, i, j]), X, alpha=0.95)
                         stage_slope[di, si, i, j] = r[0]
+                        result = mk.original_test(np.nan_to_num(stage_data[di][:, si, i, j]))
+                        stage_pvalue[di, si, i, j] = result.p
                     else:
                         mm = ~np.isnan(stage_data[di][:, si, i, j])
                         if len(X[mm]) > 1:
                             r = stats.theilslopes(np.nan_to_num(stage_data[di][:, si, i, j][mm]), X[mm], alpha=0.95)
                             stage_slope[di, si, i, j] = r[0]
+                            result = mk.original_test(np.nan_to_num(stage_data[di][:, si, i, j][mm]))
+                            stage_pvalue[di, si, i, j] = result.p
 
 np.save(work_dir + 'var/Cherry_DamDayann_slope', DamDayann_slope)
+np.save(work_dir + 'var/Cherry_DamDayann_pvalue', DamDayann_pvalue)
 np.save(work_dir + 'var/Cherry_stage_slope', stage_slope)
+np.save(work_dir + 'var/Cherry_stage_pvalue', stage_pvalue)

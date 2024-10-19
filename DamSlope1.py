@@ -22,7 +22,7 @@ t, y, x = tmin81.shape
 
 DamDayann_slope = np.zeros((y, x)) * np.nan
 DamDayann_pvalue = np.zeros((y, x)) * np.nan
-stage_data = [DamDateStage, TminDamStage]
+# stage_data = [DamDateStage, TminDamStage]
 stage_slope = np.zeros((5, 9, y, x)) * np.nan
 stage_pvalue = np.zeros((5, 9, y, x)) * np.nan
 stage_data = [DamDayStage, DamMeanStage, TminStage, DamDateStage, TminDamStage]
