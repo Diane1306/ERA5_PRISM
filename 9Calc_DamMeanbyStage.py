@@ -15,7 +15,7 @@ am = rasterio.open(work_dir + 'prism/data/tmin/1981/PRISM_tmin_stable_4kmD2_1981
 a = am.read()[0, :357, 479:1201]
 mask = np.where(a>-1000, 1, 0)
 
-len_year = 43
+len_year = 40
 stage = [0., 2., 3., 4., 5., 6., 7., 8., 9.]
 DamDayann = np.zeros((len_year, y, x)) * np.nan
 DamDayStage = np.zeros((len_year, 9, y, x)) * np.nan

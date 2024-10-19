@@ -26,7 +26,7 @@ DamDayann_slope = np.zeros((y, x)) * np.nan
 stage_slope = np.zeros((5, 9, y, x)) * np.nan
 stage_data = [DamDayStage, DamMeanStage, TminStage, DamDateStage, TminDamStage]
 
-len_year = 43
+len_year = 40
 X = np.linspace(1, len_year, len_year)
 for i in range(y):
     for j in range(x):
