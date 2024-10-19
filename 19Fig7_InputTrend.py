@@ -19,11 +19,14 @@ cartopy.config['data_dir'] = '/home/mmfire/Diane/Ag_paper/shapefiles'  # Change 
 var_mean = np.load(work_dir + 'var/spring_input_mean.npy')
 var_std = np.load(work_dir + 'var/spring_input_std.npy')
 var_slope = np.load(work_dir + 'var/spring_input_slope.npy')
+var_pvalue = np.load(work_dir + 'var/spring_input_pvalue.npy')
 
 data = []
+pvalue = []
 [data.append(var_mean[i, :, :]) for i in range(2)]
 [data.append(var_std[i, :, :]) for i in range(2)]
 [data.append(var_slope[i, :, :]) for i in range(2)]
+[pvalue.append(var_pvalue[i, :, :]) for i in range(2)]
 
 extent = [-105, -75, 34, 49]
 fig, axs = plt.subplots(3, 2, figsize=(10, 10))
@@ -49,6 +52,10 @@ for i in range(6):
     norm = BoundaryNorm(levels, ncolors=cmap.N, clip=True)
 
     pc.append(plt.pcolormesh(Lon, Lat, data[i], cmap=cmap, norm=norm, transform=ccrs.PlateCarree()))
+    if i > 3:
+        plt.scatter(Lon, Lat, np.where(pvalue[int(i - 4)] < 0.05, 1, np.nan), 'grey', alpha=.07,
+                    transform=ccrs.PlateCarree())
+
     ax.text(.01, 1.03, title[i], fontsize=16, fontweight='bold', horizontalalignment='left', transform=ax.transAxes)
 plt.subplots_adjust(bottom=0.02, top=.98, left=0.02, right=.98,
                     wspace=0.006, hspace=0.1)

@@ -5,6 +5,7 @@ import matplotlib as mpl
 mpl.rc("savefig", dpi=300)
 import rasterio
 from scipy import stats
+import pymannkendall as mk
 
 lat = np.array([49.9166666666664 - i * 0.0416666666667 for i in range(357)])
 lon = np.array([-105.0416666666507 + i * 0.0416666666667 for i in range(722)])
@@ -31,13 +32,19 @@ SEmask = np.where(np.logical_or(mdmask['VA'], mdmask['NC']), 1, 0)
 mdmask_sub = [NWmask, SWmask, NCmask, Cmask, NEmask, SEmask]
 region = ['Northern Great Plains', 'Southern Great Plains', 'Upper Midwest', 'Ohio Valley', 'NY-PA', 'VA-NC']
 
-def trend(slope):
-    if slope<0:
-        return 'b', '-'
-    else:
-        return 'r', '+'
+def trend(slope, pvalue):
+    if pvalue>=.05:
+        if slope<0:
+            return 'b', '-'
+        else:
+            return 'r', '+'
+    elif pvalue < .05:
+        if slope<0:
+            return 'b', '-*'
+        else:
+            return 'r', '+*'
 
-len_year = 43
+len_year = 40
 DamDayStage = np.load(work_dir + f'var/Cherry_DamDayStage.npy')
 DamDayStage_states = np.zeros((len_year, 9, len(mdmask_sub)))
 for yl in range(len_year):
@@ -56,19 +63,27 @@ DamMeanStage_states_sum = np.nanmean(DamMeanStage_states, axis=0)
 
 slope_occur = np.zeros((9, len(mdmask_sub))) * np.nan
 slope_inten = np.zeros((9, len(mdmask_sub))) * np.nan
+pvalue_occur = np.zeros((9, 6)) * np.nan
+pvalue_inten = np.zeros((9, 6)) * np.nan
 DamYearCount = np.zeros((9, len(mdmask_sub)))
-year = np.linspace(1981, 2023, len_year)
+year = np.linspace(1981, 2020, len_year)
 for si in range(9):
     for ri in range(len(mdmask_sub)):
         flag1 = ~np.isnan(DamDayStage_states[:, si, ri])
-        if len(year[flag1]):
+        if len(year[flag1])>1:
             r = stats.theilslopes(DamDayStage_states[:, si, ri][flag1], year[flag1], alpha=0.95)
             slope_occur[si, ri] = r[0]
+
+            result = mk.original_test(DamDayStage_states[:, si, ri][flag1])
+            pvalue_occur[si, ri] = result.p
         DamYearCount[si, ri] = flag1.sum()
         flag2 = ~np.isnan(DamMeanStage_states[:, si, ri])
-        if len(year[flag2]):
+        if len(year[flag2])>1:
             r = stats.theilslopes(DamMeanStage_states[:, si, ri][flag2], year[flag2], alpha=0.95)
             slope_inten[si, ri] = r[0]
+
+            result = mk.original_test(DamMeanStage_states[:, si, ri][flag2])
+            pvalue_inten[si, ri] = result.p
 
 X = np.linspace(0, 8, 9)
 fig, axs = plt.subplots(3, 2, sharex=True, sharey=True, figsize=(12, 7))
@@ -82,10 +97,10 @@ for i in range(len(mdmask_sub)):
         ax.text(X[si] - .35, DamDayStage_states_mean[si, i] + 0.3, int(DamYearCount[si, i]), color='k', fontsize=10,
                 fontweight='bold')
         if not np.isnan(slope_occur[si, i]):
-            c, s = trend(slope_occur[si, i])
+            c, s = trend(slope_occur[si, i], pvalue_occur[si, i])
             ax.text(X[si] - .35, DamDayStage_states_mean[si, i], s, color=c, fontsize=15, fontweight='bold')
         if not np.isnan(slope_inten[si, i]):
-            c, s = trend(slope_inten[si, i])
+            c, s = trend(slope_inten[si, i], pvalue_inten[si, i])
             axx.text(X[si] + .05, DamMeanStage_states_sum[si, i], s, color=c, fontsize=15, fontweight='bold')
     ax.set_ylim(0, 4)
     axx.set_ylim(0, 1)

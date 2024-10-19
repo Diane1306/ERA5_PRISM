@@ -20,12 +20,18 @@ var_mean = np.load(work_dir + 'var/spring_input_mean.npy')
 var_std = np.load(work_dir + 'var/spring_input_std.npy')
 var_slope = np.load(work_dir + 'var/spring_input_slope.npy')
 var_std_slope = np.load(work_dir + 'var/spring_input_Tstd_slope.npy')
+var_pvalue = np.load(work_dir + 'var/spring_input_pvalue.npy')
+var_std_pvalue = np.load(work_dir + 'var/spring_input_Tstd_pvalue.npy')
 
 data = []
 [data.append(var_mean[i, :, :]) for i in range(2)]
 [data.append(var_slope[i, :, :]) for i in range(2)]
 [data.append(var_std[i, :, :]) for i in range(2)]
 [data.append(var_std_slope[i, :, :]) for i in range(2)]
+pvalue = []
+[pvalue.append(var_pvalue[i, :, :]) for i in range(2)]
+[pvalue.append(var_std_pvalue[i, :, :]) for i in range(2)]
+
 
 extent = [-105, -75, 34, 49]
 fig, axs = plt.subplots(4, 2, figsize=(10, 13))
@@ -35,6 +41,7 @@ step = [5, 5, .03, .03, .2, .2, .01, .01]
 title = ['(a) Tmax mean', '(b) Tmin mean', '(c) Tmax trend', '(d) Tmin trend',
          '(e) Tmax std', '(f) Tmin std', '(g) Tmax std trend', '(h) Tmin std trend']
 pc = []
+pi = 0
 for i in range(8):
     ax = plt.subplot(4, 2, i + 1, projection=ccrs.AlbersEqualArea(np.mean(extent[:2]), np.mean(extent[2:])))
     ax.set_extent(extent)
@@ -51,6 +58,11 @@ for i in range(8):
     norm = BoundaryNorm(levels, ncolors=cmap.N, clip=True)
 
     pc.append(plt.pcolormesh(Lon, Lat, data[i], cmap=cmap, norm=norm, transform=ccrs.PlateCarree()))
+    if i in [2, 3, 6, 7]:
+        plt.scatter(Lon, Lat, np.where(pvalue[pi] < 0.05, 1, np.nan), 'grey', alpha=.07,
+                    transform=ccrs.PlateCarree())
+        pi = pi + 1
+
     ax.text(.01, 1.03, title[i], fontsize=16, fontweight='bold', horizontalalignment='left', transform=ax.transAxes)
 plt.subplots_adjust(bottom=0.02, top=.98, left=0.02, right=.98,
                     wspace=0.006, hspace=0.1)
