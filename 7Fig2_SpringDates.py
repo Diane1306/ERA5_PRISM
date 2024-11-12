@@ -38,9 +38,9 @@ pvalue.append(var_pvalue[4, :, :])
 
 extent = [-105, -75, 34, 49]
 fig, axs = plt.subplots(3, 3, figsize=(15, 10))
-ll = [60, 0, -.6, 0, 0, -.6, 0, 0, -.6]
-lr = [160, 12, .6, 160, 12, .6, 30, 12, .6]
-step = [20, 2, .2, 40, 2, .2, 6, 2, .2]
+ll = [60, 0, -.3, 60, 0, -.3, 10, 0, -.3]
+lr = [160, 10, .3, 160, 12, .3, 30, 10, .3]
+step = [20, 2, .1, 20, 2, .1, 5, 2, .1]
 title = ['(a) side green mean', '(b) side green std', '(c) side green trend', '(d) full bloom mean',
          '(e) full bloom std', '(f) full bloom trend', '(g) spring duration mean', '(h) spring duration std',
          '(i) spring duration trend']
@@ -53,16 +53,23 @@ for i in range(9):
     ax.add_feature(cartopy.feature.STATES.with_scale('10m'), lw=.5)
     ax.add_feature(cartopy.feature.LAKES, edgecolor='black', facecolor='white', lw=.3)
 
-    levels = MaxNLocator(nbins=100).tick_values(ll[i], lr[i])
-    if i % 3 - 2:
-        cmap = plt.get_cmap('viridis')
+    if i in [0, 3]:
+        cmap = plt.get_cmap('nipy_spectral')
+        levels = MaxNLocator(nbins=100).tick_values(ll[i], lr[i])
+    elif i in [6]:
+        cmap = plt.get_cmap('tab20')
+        levels = MaxNLocator(nbins=20).tick_values(ll[i], lr[i])
+    elif i % 3 == 1:
+        cmap = plt.get_cmap('tab10')
+        levels = MaxNLocator(nbins=10).tick_values(ll[i], lr[i])
     else:
         cmap = plt.get_cmap('bwr')
+        levels = MaxNLocator(nbins=100).tick_values(ll[i], lr[i])
     norm = BoundaryNorm(levels, ncolors=cmap.N, clip=True)
 
     pc.append(plt.pcolormesh(Lon, Lat, data[i], cmap=cmap, norm=norm, transform=ccrs.PlateCarree()))
     if i % 3 == 2:
-        plt.scatter(Lon, Lat, np.where(pvalue[int((i - 2) / 3)] < 0.05, 1, np.nan), 'grey', alpha=.07,
+        plt.scatter(Lon, Lat, np.where(pvalue[int((i - 2) / 3)] < 0.05, 1, np.nan), 'grey', alpha=.1,
                     transform=ccrs.PlateCarree())
     ax.text(.01, 1.03, title[i], fontsize=16, fontweight='bold', horizontalalignment='left', transform=ax.transAxes)
 
@@ -79,7 +86,8 @@ plt.subplots_adjust(bottom=0.02, top=.98, left=0.02, right=.98,
                     wspace=0.005, hspace=0.1)
 i = 0
 cb_ax = fig.add_axes([.005, 0.345, 0.01, 0.64])
-cbar = fig.colorbar(pc[i], cax=cb_ax, ticks=np.arange(ll[i], lr[i] + step[i], step[i]), extend='max')
+# cb_ax = fig.add_axes([.005, 0.665, 0.01, 0.32])
+cbar = fig.colorbar(pc[i], cax=cb_ax, ticks=np.arange(ll[i], lr[i] + step[i], step[i]), extend='both')
 cb_ax.yaxis.set_ticks_position('left')
 cb_ax.tick_params(labelsize=15)
 cb_ax.tick_params(axis='y', which='minor', length=0)  # Remove minor ticks
@@ -88,9 +96,15 @@ cb_ax = fig.add_axes([0.985, .02, 0.01, 0.96])
 cbar = fig.colorbar(pc[i], cax=cb_ax, ticks=np.arange(ll[i], lr[i] + step[i], step[i]), extend='both')
 cb_ax.tick_params(labelsize=15)
 cb_ax.tick_params(axis='y', which='minor', length=0)  # Remove minor ticks
+# i = 3
+# cb_ax = fig.add_axes([0.005, .345, 0.01, 0.32])
+# cbar = fig.colorbar(pc[i], cax=cb_ax, ticks=np.arange(ll[i], lr[i] + step[i], step[i]), extend='both')
+# cb_ax.yaxis.set_ticks_position('left')
+# cb_ax.tick_params(labelsize=15)
+# cb_ax.tick_params(axis='y', which='minor', length=0)  # Remove minor ticks
 i = 6
 cb_ax = fig.add_axes([0.005, .02, 0.01, 0.32])
-cbar = fig.colorbar(pc[i], cax=cb_ax, ticks=np.arange(ll[i], lr[i] + step[i], step[i]), extend='max')
+cbar = fig.colorbar(pc[i], cax=cb_ax, ticks=np.arange(ll[i], lr[i] + step[i], step[i]), extend='both')
 cb_ax.yaxis.set_ticks_position('left')
 cb_ax.tick_params(labelsize=15)
 cb_ax.tick_params(axis='y', which='minor', length=0)  # Remove minor ticks
