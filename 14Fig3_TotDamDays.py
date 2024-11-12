@@ -38,7 +38,7 @@ pvalue.append(DamDayann_pvalue)
 extent = [-105, -75, 34, 49]
 fig, axs = plt.subplots(3, 2, figsize=(10, 10))
 ll = [0, 0, 0, 0, -.01, -.1]
-lr = [1, 4, .5, 4, .01, .1]
+lr = [1, 5, .5, 5, .01, .1]
 step = [.2, 1, .1, 1, .005, .05]
 title = ['(a) buds remaining fraction mean', '(b) damage days mean', '(c) buds remaining fraction std',
          '(d) damage days std',
@@ -52,11 +52,15 @@ for i in range(6):
     ax.add_feature(cartopy.feature.STATES.with_scale('10m'), lw=.5)
     ax.add_feature(cartopy.feature.LAKES, edgecolor='black', facecolor='white', lw=.3)
 
-    levels = MaxNLocator(nbins=100).tick_values(ll[i], lr[i])
-    if i < 4:
-        cmap = plt.get_cmap('viridis')
+    if i in [0, 2]:
+        cmap = plt.get_cmap('nipy_spectral')
+        levels = MaxNLocator(nbins=100).tick_values(ll[i], lr[i])
+    elif i in [1, 3]:
+        cmap = plt.get_cmap('tab10')
+        levels = MaxNLocator(nbins=10).tick_values(ll[i], lr[i])
     else:
         cmap = plt.get_cmap('bwr')
+        levels = MaxNLocator(nbins=100).tick_values(ll[i], lr[i])
     norm = BoundaryNorm(levels, ncolors=cmap.N, clip=True)
 
     pc.append(plt.pcolormesh(Lon, Lat, data[i], cmap=cmap, norm=norm, transform=ccrs.PlateCarree()))
@@ -108,7 +112,7 @@ cb_ax.tick_params(axis='y', which='minor', length=0)  # Remove minor ticks
 i = 5
 cb_ax = fig.add_axes([0.985, .02, 0.01, 0.315])
 cbar = fig.colorbar(pc[i], cax=cb_ax, ticks=np.arange(ll[i], lr[i] + step[i], step[i]), extend='both')
-cb_ax.tick_params(labelsize=12)
+cb_ax.tick_params(labelsize=15)
 cb_ax.tick_params(axis='y', which='minor', length=0)  # Remove minor ticks
 
 plt.savefig(work_dir + 'plot/3TotDamDays.png', bbox_inches='tight')
