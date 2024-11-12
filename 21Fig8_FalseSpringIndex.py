@@ -58,7 +58,7 @@ for i in range(3):
 
     if i < 2:
         levels = MaxNLocator(nbins=yr+1).tick_values(0, yr)
-        cmap = plt.get_cmap('viridis')
+        cmap = plt.get_cmap('nipy_spectral')
         norm = BoundaryNorm(levels, ncolors=cmap.N, clip=True)
         pc.append(plt.pcolormesh(Lon, Lat, fsidata[i].sum(axis=0), cmap=cmap, norm=norm, transform=ccrs.PlateCarree()))
     else:

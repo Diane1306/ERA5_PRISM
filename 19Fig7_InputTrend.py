@@ -30,8 +30,8 @@ pvalue = []
 
 extent = [-105, -75, 34, 49]
 fig, axs = plt.subplots(3, 2, figsize=(10, 10))
-ll = [-10, -10, 0, 0, -.06, -.06]
-lr = [25, 25, 1.4, 1.4, .06, .06]
+ll = [5, -5, 0, 0, -.06, -.06]
+lr = [25, 15, 1.4, 1.4, .06, .06]
 step = [5, 5, .2, .2, .03, .03]
 title = ['(a) Tmax mean', '(b) Tmin mean', '(c) Tmax std', '(d) Tmin std',
          '(e) Tmax trend', '(f) Tmin trend']
@@ -46,7 +46,7 @@ for i in range(6):
 
     levels = MaxNLocator(nbins=100).tick_values(ll[i], lr[i])
     if i < 4:
-        cmap = plt.get_cmap('viridis')
+        cmap = plt.get_cmap('nipy_spectral')
     else:
         cmap = plt.get_cmap('bwr')
     norm = BoundaryNorm(levels, ncolors=cmap.N, clip=True)
@@ -70,13 +70,13 @@ for ax in axs.flat:  # Loop through all axes objects
 
 i = 0
 cb_ax = fig.add_axes([.005, 0.665, 0.01, 0.315])
-cbar = fig.colorbar(pc[i], cax=cb_ax, ticks=np.arange(ll[i], lr[i] + step[i], step[i]))
+cbar = fig.colorbar(pc[i], cax=cb_ax, ticks=np.arange(ll[i], lr[i] + step[i], step[i]), extend='both')
 cb_ax.yaxis.set_ticks_position('left')
 cb_ax.tick_params(labelsize=15)
 cb_ax.tick_params(axis='y', which='minor', length=0)  # Remove minor ticks
 i = 1
 cb_ax = fig.add_axes([0.985, 0.665, 0.01, 0.315])
-cbar = fig.colorbar(pc[i], cax=cb_ax, ticks=np.arange(ll[i], lr[i] + step[i], step[i]), extend='max')
+cbar = fig.colorbar(pc[i], cax=cb_ax, ticks=np.arange(ll[i], lr[i] + step[i], step[i]), extend='both')
 cb_ax.tick_params(labelsize=15)
 cb_ax.tick_params(axis='y', which='minor', length=0)  # Remove minor ticks
 i = 2
@@ -92,13 +92,13 @@ cb_ax.tick_params(labelsize=15)
 cb_ax.tick_params(axis='y', which='minor', length=0)  # Remove minor ticks
 i = 4
 cb_ax = fig.add_axes([0.005, .02, 0.01, 0.315])
-cbar = fig.colorbar(pc[i], cax=cb_ax, ticks=np.arange(ll[i], lr[i] + step[i], step[i]), extend='max')
+cbar = fig.colorbar(pc[i], cax=cb_ax, ticks=np.arange(ll[i], lr[i] + step[i], step[i]), extend='both')
 cb_ax.yaxis.set_ticks_position('left')
 cb_ax.tick_params(labelsize=15)
 cb_ax.tick_params(axis='y', which='minor', length=0)  # Remove minor ticks
 i = 5
 cb_ax = fig.add_axes([0.985, .02, 0.01, 0.315])
-cbar = fig.colorbar(pc[i], cax=cb_ax, ticks=np.arange(ll[i], lr[i] + step[i], step[i]), extend='max')
+cbar = fig.colorbar(pc[i], cax=cb_ax, ticks=np.arange(ll[i], lr[i] + step[i], step[i]), extend='both')
 cb_ax.tick_params(labelsize=15)
 cb_ax.tick_params(axis='y', which='minor', length=0)  # Remove minor ticks
 
