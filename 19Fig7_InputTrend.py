@@ -51,10 +51,12 @@ for i in range(6):
         cmap = plt.get_cmap('bwr')
     norm = BoundaryNorm(levels, ncolors=cmap.N, clip=True)
 
-    pc.append(plt.pcolormesh(Lon, Lat, data[i], cmap=cmap, norm=norm, transform=ccrs.PlateCarree()))
     if i > 3:
+        pc.append(plt.pcolormesh(Lon, Lat, data[i], cmap=cmap, norm=norm, transform=ccrs.PlateCarree()))
         plt.scatter(Lon, Lat, np.where(pvalue[int(i - 4)] < 0.05, 1, np.nan), 'grey', alpha=.07,
                     transform=ccrs.PlateCarree())
+    else:
+        pc.append(plt.pcolormesh(Lon, Lat, data[i], cmap=cmap, norm=norm, transform=ccrs.PlateCarree(), alpha=0.7))
 
     ax.text(.01, 1.03, title[i], fontsize=16, fontweight='bold', horizontalalignment='left', transform=ax.transAxes)
 plt.subplots_adjust(bottom=0.02, top=.98, left=0.02, right=.98,

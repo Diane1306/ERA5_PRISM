@@ -5,6 +5,7 @@ import cartopy
 from matplotlib.ticker import MaxNLocator
 from matplotlib.colors import BoundaryNorm
 import matplotlib as mpl
+from matplotlib.colors import LinearSegmentedColormap
 mpl.rc("savefig", dpi=300)
 
 lat = np.array([49.9166666666664 - i * 0.0416666666667 for i in range(357)])
@@ -43,6 +44,7 @@ step = [.2, 1, .1, 1, .005, .05]
 title = ['(a) buds remaining fraction mean', '(b) damage days mean', '(c) buds remaining fraction std',
          '(d) damage days std',
          '(e) buds remaining fraction trend', '(f) damage days trend']
+colors = ['#7fc97f','#beaed4','#fdc086','#ffff99','#386cb0']
 pc = []
 for i in range(6):
     ax = plt.subplot(3, 2, i + 1, projection=ccrs.AlbersEqualArea(np.mean(extent[:2]), np.mean(extent[2:])))
@@ -56,17 +58,21 @@ for i in range(6):
         cmap = plt.get_cmap('nipy_spectral')
         levels = MaxNLocator(nbins=100).tick_values(ll[i], lr[i])
     elif i in [1, 3]:
-        cmap = plt.get_cmap('tab10')
-        levels = MaxNLocator(nbins=10).tick_values(ll[i], lr[i])
+        cmap = LinearSegmentedColormap.from_list("custom_diverging", colors)
+        levels = MaxNLocator(nbins=lr[i]+1).tick_values(0, lr[i])
     else:
         cmap = plt.get_cmap('bwr')
         levels = MaxNLocator(nbins=100).tick_values(ll[i], lr[i])
     norm = BoundaryNorm(levels, ncolors=cmap.N, clip=True)
 
-    pc.append(plt.pcolormesh(Lon, Lat, data[i], cmap=cmap, norm=norm, transform=ccrs.PlateCarree()))
     if i > 3:
+        pc.append(plt.pcolormesh(Lon, Lat, data[i], cmap=cmap, norm=norm, transform=ccrs.PlateCarree()))
         plt.scatter(Lon, Lat, np.where(pvalue[int(i - 4)] < 0.05, 1, np.nan), 'grey', alpha=.07,
                     transform=ccrs.PlateCarree())
+    elif i in [1, 3]:
+        pc.append(plt.pcolormesh(Lon, Lat, data[i], cmap=cmap, norm=norm, transform=ccrs.PlateCarree()))
+    else:
+        pc.append(plt.pcolormesh(Lon, Lat, data[i], cmap=cmap, norm=norm, transform=ccrs.PlateCarree(), alpha=0.7))
 
     ax.text(.01, 1.03, title[i], fontsize=16, fontweight='bold', horizontalalignment='left', transform=ax.transAxes)
 

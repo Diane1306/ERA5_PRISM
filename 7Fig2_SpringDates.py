@@ -40,7 +40,7 @@ extent = [-105, -75, 34, 49]
 fig, axs = plt.subplots(3, 3, figsize=(15, 10))
 ll = [60, 0, -.3, 60, 0, -.3, 10, 0, -.3]
 lr = [160, 10, .3, 160, 12, .3, 30, 10, .3]
-step = [20, 2, .1, 20, 2, .1, 5, 2, .1]
+step = [10, 2, .1, 10, 2, .1, 5, 2, .1]
 title = ['(a) side green mean', '(b) side green std', '(c) side green trend', '(d) full bloom mean',
          '(e) full bloom std', '(f) full bloom trend', '(g) spring duration mean', '(h) spring duration std',
          '(i) spring duration trend']
@@ -67,10 +67,13 @@ for i in range(9):
         levels = MaxNLocator(nbins=100).tick_values(ll[i], lr[i])
     norm = BoundaryNorm(levels, ncolors=cmap.N, clip=True)
 
-    pc.append(plt.pcolormesh(Lon, Lat, data[i], cmap=cmap, norm=norm, transform=ccrs.PlateCarree()))
     if i % 3 == 2:
+        pc.append(plt.pcolormesh(Lon, Lat, data[i], cmap=cmap, norm=norm, transform=ccrs.PlateCarree()))
         plt.scatter(Lon, Lat, np.where(pvalue[int((i - 2) / 3)] < 0.05, 1, np.nan), 'grey', alpha=.1,
                     transform=ccrs.PlateCarree())
+    else:
+        pc.append(plt.pcolormesh(Lon, Lat, data[i], cmap=cmap, norm=norm, transform=ccrs.PlateCarree(), alpha=0.7))
+
     ax.text(.01, 1.03, title[i], fontsize=16, fontweight='bold', horizontalalignment='left', transform=ax.transAxes)
 
 for ax in axs.flat:  # Loop through all axes objects
