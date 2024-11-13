@@ -261,10 +261,10 @@ PROGRAM MAIN
         read(11, *)inputfile
         input = "/home/mmfire/Diane/Ag_paper/GDD/GDD_inputdata/"//inputfile
         read(12, *)outputfile1
-        output1 = "/home/mmfire/Diane/Ag_paper/GDD/GDD_output/daily/"//outputfile1
+        output1 = "/home/mmfire/Diane/Ag_paper/GDD/GDD_output/Jan1st/daily/"//outputfile1
 !        output1 = "zz_"//outputfile1
         read(13, *)outputfile2
-        output2 = "/home/mmfire/Diane/Ag_paper/GDD/GDD_output/yearly/"//outputfile2
+        output2 = "/home/mmfire/Diane/Ag_paper/GDD/GDD_output/Jan1st/yearly/"//outputfile2
 !        output2 = "zz_"//outputfile2
         call CERASUS_v64(input, output1, output2)
     end do
