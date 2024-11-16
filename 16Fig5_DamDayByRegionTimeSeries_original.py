@@ -52,23 +52,26 @@ for ri in range(len(mdmask_sub)):
         pvalue.append(result.p)
 
 fig, axs = plt.subplots(3, 2, sharex=True, sharey=True, figsize=(12, 7))
+yl =0
+yr = 15
 for i in range(len(mdmask_sub)):
     ax = plt.subplot(3, 2, i + 1)
     plt.plot(X, DamDayann_states[:, i], 'bo-', ms=3)
-    plt.ylim(0, 10)
+    plt.ylim(yl, yr)
     ax.text(.01, .9, f'mean = {np.nanmean(DamDayann_states[:, i]):.2f}', fontsize=15, transform=ax.transAxes)
     ax.text(.01, .8, f'std = {np.nanstd(DamDayann_states[:, i]):.2f}', fontsize=15, transform=ax.transAxes)
     ax.text(.01, .7, f'trend = {slope[i]:.2f} (p={pvalue[i]:.4f})', fontsize=15,transform=ax.transAxes)
     ax.text(.99, .9, f'{region[i]}', fontsize=16, fontweight='bold', horizontalalignment='right',
             transform=ax.transAxes)
     #     plt.grid()
-    plt.vlines(np.arange(1981, 2021, 4), 0, 10, alpha=0.5, linestyles='dashed', colors='grey')
+    plt.vlines(np.arange(1981, 2021, 4), yl, yr, alpha=0.5, linestyles='dashed', colors='grey')
     plt.subplots_adjust(wspace=.06)
-    if i % 2:
-        plt.yticks(np.arange(0, 11, 2), [])
+    if not i % 2:
+        ax.set_yticks(np.arange(0, yr + 1, 3))
+        ax.set_yticklabels(np.arange(0, yr + 1, 3), fontsize=14)
+        ax.set_ylabel('Damage Days', fontsize=15)
     else:
-        plt.yticks(np.arange(0, 11, 2), fontsize=14)
-        plt.ylabel('Damage Days', fontsize=15)
+        ax.set_yticks(np.arange(0, yr+1, 3))
 
     if i < 4:
         plt.xticks(np.arange(1981, 2021, 4), [])

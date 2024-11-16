@@ -39,12 +39,12 @@ pvalue.append(DamDayann_pvalue)
 extent = [-105, -75, 34, 49]
 fig, axs = plt.subplots(3, 2, figsize=(10, 10))
 ll = [0, 0, 0, 0, -.01, -.1]
-lr = [1, 5, .5, 5, .01, .1]
-step = [.2, 1, .1, 1, .005, .05]
+lr = [1, 10, .5, 10, .01, .1]
+step = [.2, 2, .1, 2, .005, .05]
 title = ['(a) buds remaining fraction mean', '(b) damage days mean', '(c) buds remaining fraction std',
          '(d) damage days std',
          '(e) buds remaining fraction trend', '(f) damage days trend']
-colors = ['#7fc97f','#beaed4','#fdc086','#ffff99','#386cb0']
+# colors = ['#7fc97f','#beaed4','#fdc086','#ffff99','#386cb0', '#f0027f']
 pc = []
 for i in range(6):
     ax = plt.subplot(3, 2, i + 1, projection=ccrs.AlbersEqualArea(np.mean(extent[:2]), np.mean(extent[2:])))
@@ -58,8 +58,9 @@ for i in range(6):
         cmap = plt.get_cmap('nipy_spectral')
         levels = MaxNLocator(nbins=100).tick_values(ll[i], lr[i])
     elif i in [1, 3]:
-        cmap = LinearSegmentedColormap.from_list("custom_diverging", colors)
-        levels = MaxNLocator(nbins=lr[i]+1).tick_values(0, lr[i])
+        # cmap = LinearSegmentedColormap.from_list("custom_diverging", colors)
+        cmap = plt.get_cmap('nipy_spectral')
+        levels = MaxNLocator(nbins=lr[i]-ll[i]+1).tick_values(ll[i], lr[i])
     else:
         cmap = plt.get_cmap('bwr')
         levels = MaxNLocator(nbins=100).tick_values(ll[i], lr[i])
@@ -69,8 +70,6 @@ for i in range(6):
         pc.append(plt.pcolormesh(Lon, Lat, data[i], cmap=cmap, norm=norm, transform=ccrs.PlateCarree()))
         plt.scatter(Lon, Lat, np.where(pvalue[int(i - 4)] < 0.05, 1, np.nan), 'grey', alpha=.07,
                     transform=ccrs.PlateCarree())
-    elif i in [1, 3]:
-        pc.append(plt.pcolormesh(Lon, Lat, data[i], cmap=cmap, norm=norm, transform=ccrs.PlateCarree()))
     else:
         pc.append(plt.pcolormesh(Lon, Lat, data[i], cmap=cmap, norm=norm, transform=ccrs.PlateCarree(), alpha=0.7))
 

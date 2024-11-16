@@ -50,7 +50,8 @@ for ri in range(len(mdmask_sub)):
 
         result = mk.original_test(DamDayann_states[:, ri][flag])
         pvalue.append(result.p)
-
+yl =0
+yr = 10
 fig, axs = plt.subplots(2, 2, sharex=True, sharey=True, figsize=(12, 5))
 for i in range(len(mdmask_sub)):
     ax = plt.subplot(2, 2, i + 1)
@@ -64,11 +65,12 @@ for i in range(len(mdmask_sub)):
     #     plt.grid()
     plt.vlines(np.arange(1981, 2021, 4), 0, 10, alpha=0.5, linestyles='dashed', colors='grey')
     plt.subplots_adjust(wspace=.06)
-    if i % 2:
-        plt.yticks(np.arange(0, 11, 2), [])
+    if not i % 2:
+        ax.set_yticks(np.arange(0, yr + 1, 3))
+        ax.set_yticklabels(np.arange(0, yr + 1, 3), fontsize=14)
+        ax.set_ylabel('Damage Days', fontsize=15)
     else:
-        plt.yticks(np.arange(0, 11, 2), fontsize=14)
-        plt.ylabel('Damage Days', fontsize=15)
+        ax.set_yticks(np.arange(0, yr + 1, 3))
 
     if i < 2:
         plt.xticks(np.arange(1981, 2021, 4), [])

@@ -38,8 +38,8 @@ pvalue.append(var_pvalue[4, :, :])
 
 extent = [-105, -75, 34, 49]
 fig, axs = plt.subplots(3, 3, figsize=(15, 10))
-ll = [60, 0, -.3, 60, 0, -.3, 10, 0, -.3]
-lr = [160, 10, .3, 160, 12, .3, 30, 10, .3]
+ll = [60, 0, -.3, 60, 0, -.3, 15, 0, -.3]
+lr = [160, 12, .3, 160, 12, .3, 30, 12, .3]
 step = [10, 2, .1, 10, 2, .1, 5, 2, .1]
 title = ['(a) side green mean', '(b) side green std', '(c) side green trend', '(d) full bloom mean',
          '(e) full bloom std', '(f) full bloom trend', '(g) spring duration mean', '(h) spring duration std',
@@ -53,15 +53,15 @@ for i in range(9):
     ax.add_feature(cartopy.feature.STATES.with_scale('10m'), lw=.5)
     ax.add_feature(cartopy.feature.LAKES, edgecolor='black', facecolor='white', lw=.3)
 
-    if i in [0, 3]:
+    if i in [0, 3, 6]:
         cmap = plt.get_cmap('nipy_spectral')
         levels = MaxNLocator(nbins=100).tick_values(ll[i], lr[i])
     elif i in [6]:
-        cmap = plt.get_cmap('tab20')
-        levels = MaxNLocator(nbins=20).tick_values(ll[i], lr[i])
+        cmap = plt.get_cmap('nipy_spectral')
+        levels = MaxNLocator(nbins=lr[i]-ll[i]+1).tick_values(ll[i], lr[i])
     elif i % 3 == 1:
-        cmap = plt.get_cmap('tab10')
-        levels = MaxNLocator(nbins=10).tick_values(ll[i], lr[i])
+        cmap = plt.get_cmap('nipy_spectral')
+        levels = MaxNLocator(nbins=lr[i]-ll[i]+1).tick_values(ll[i], lr[i])
     else:
         cmap = plt.get_cmap('bwr')
         levels = MaxNLocator(nbins=100).tick_values(ll[i], lr[i])
