@@ -38,9 +38,9 @@ pvalue.append(var_pvalue[4, :, :])
 
 extent = [-105, -75, 34, 49]
 fig, axs = plt.subplots(3, 3, figsize=(15, 10))
-ll = [60, 0, -.3, 60, 0, -.3, 15, 0, -.3]
-lr = [160, 12, .3, 160, 12, .3, 30, 12, .3]
-step = [10, 2, .1, 10, 2, .1, 5, 2, .1]
+ll = [30, 0, -.4, 30, 0, -.4, 15, 0, -.4]
+lr = [160, 14, .4, 160, 14, .4, 30, 14, .4]
+step = [20, 2, .1, 20, 2, .1, 5, 2, .1]
 title = ['(a) side green mean', '(b) side green std', '(c) side green trend', '(d) full bloom mean',
          '(e) full bloom std', '(f) full bloom trend', '(g) spring duration mean', '(h) spring duration std',
          '(i) spring duration trend']
@@ -53,7 +53,7 @@ for i in range(9):
     ax.add_feature(cartopy.feature.STATES.with_scale('10m'), lw=.5)
     ax.add_feature(cartopy.feature.LAKES, edgecolor='black', facecolor='white', lw=.3)
 
-    if i in [0, 3, 6]:
+    if i in [0, 3]:
         cmap = plt.get_cmap('nipy_spectral')
         levels = MaxNLocator(nbins=100).tick_values(ll[i], lr[i])
     elif i in [6]:
