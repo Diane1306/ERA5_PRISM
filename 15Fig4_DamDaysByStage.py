@@ -43,10 +43,10 @@ for i in range(9):
     ax.add_feature(cartopy.feature.LAKES, edgecolor='black', facecolor='white', lw=.3)
 
     levels = MaxNLocator(nbins=100).tick_values(ll, lr)
-    cmap = plt.get_cmap('viridis_r')
+    cmap = plt.get_cmap('nipy_spectral')
     norm = BoundaryNorm(levels, ncolors=cmap.N, clip=True)
 
-    pc = plt.pcolormesh(Lon, Lat, data[i, :, :], cmap=cmap, norm=norm, transform=ccrs.PlateCarree())
+    pc = plt.pcolormesh(Lon, Lat, data[i, :, :], cmap=cmap, norm=norm, transform=ccrs.PlateCarree(), alpha=0.7)
     ax.text(.01, 1.03, title[i], fontsize=16, fontweight='bold', horizontalalignment='left', transform=ax.transAxes)
 
 for ax in axs.flat:  # Loop through all axes objects
