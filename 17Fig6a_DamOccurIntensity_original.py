@@ -85,6 +85,7 @@ for si in range(9):
             result = mk.original_test(DamMeanStage_states[:, si, ri][flag2])
             pvalue_inten[si, ri] = result.p
 
+damdayr = 5
 X = np.linspace(0, 8, 9)
 fig, axs = plt.subplots(3, 2, sharex=True, sharey=True, figsize=(12, 7))
 for i in range(len(mdmask_sub)):
@@ -102,7 +103,7 @@ for i in range(len(mdmask_sub)):
         if not np.isnan(slope_inten[si, i]):
             c, s = trend(slope_inten[si, i], pvalue_inten[si, i])
             axx.text(X[si] + .05, DamMeanStage_states_sum[si, i], s, color=c, fontsize=15, fontweight='bold')
-    ax.set_ylim(0, 4)
+    ax.set_ylim(0, damdayr)
     axx.set_ylim(0, 1)
     ax.set_xlim(-1, 9)
     axx.set_xlim(-1, 9)
@@ -110,8 +111,8 @@ for i in range(len(mdmask_sub)):
             transform=ax.transAxes)
     if not i % 2:
         axx.set_yticks([])
-        ax.set_yticks([0, 1, 2, 3, 4])
-        ax.set_yticklabels([0, 1, 2, 3, 4], fontsize=15, color='springgreen')
+        ax.set_yticks([0, 1, 2, 3, 4, 5])
+        ax.set_yticklabels([0, 1, 2, 3, 4, 5], fontsize=15, color='springgreen')
         ax.set_ylabel('Damage days', fontsize=15)
     else:
         # ax.set_yticks([])

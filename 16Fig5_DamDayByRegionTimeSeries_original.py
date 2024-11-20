@@ -53,7 +53,8 @@ for ri in range(len(mdmask_sub)):
 
 fig, axs = plt.subplots(3, 2, sharex=True, sharey=True, figsize=(12, 7))
 yl =0
-yr = 15
+yr = 20
+step = 5
 for i in range(len(mdmask_sub)):
     ax = plt.subplot(3, 2, i + 1)
     plt.plot(X, DamDayann_states[:, i], 'bo-', ms=3)
@@ -67,11 +68,11 @@ for i in range(len(mdmask_sub)):
     plt.vlines(np.arange(1981, 2021, 4), yl, yr, alpha=0.5, linestyles='dashed', colors='grey')
     plt.subplots_adjust(wspace=.06)
     if not i % 2:
-        ax.set_yticks(np.arange(0, yr + 1, 3))
-        ax.set_yticklabels(np.arange(0, yr + 1, 3), fontsize=14)
+        ax.set_yticks(np.arange(0, yr + 1, step))
+        ax.set_yticklabels(np.arange(0, yr + 1, step), fontsize=14)
         ax.set_ylabel('Damage Days', fontsize=15)
     else:
-        ax.set_yticks(np.arange(0, yr+1, 3))
+        ax.set_yticks(np.arange(0, yr+1, step))
 
     if i < 4:
         plt.xticks(np.arange(1981, 2021, 4), [])
