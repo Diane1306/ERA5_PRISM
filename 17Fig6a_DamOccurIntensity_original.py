@@ -34,15 +34,19 @@ region = ['Northern Great Plains', 'Southern Great Plains', 'Upper Midwest', 'Oh
 
 def trend(slope, pvalue):
     if pvalue>=.05:
-        if slope<0:
+        if slope<-0.0001:
             return 'b', '-'
-        else:
+        elif slope>0.0001:
             return 'r', '+'
-    elif pvalue < .05:
-        if slope<0:
-            return 'b', '-*'
         else:
+            return "k"," "
+    elif pvalue < .05:
+        if slope<-0.0001:
+            return 'b', '-*'
+        elif slope>0.0001:
             return 'r', '+*'
+        else:
+            return "k"," "
 
 len_year = 40
 DamDayStage = np.load(work_dir + f'var/Cherry_DamDayStage.npy')
