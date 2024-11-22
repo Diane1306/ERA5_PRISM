@@ -29,8 +29,8 @@ data = np.where(mask, data, np.nan)
 extent = [-105, -75, 34, 49]
 fig, axs = plt.subplots(3, 3, figsize=(15, 10))
 ll = 0
-lr = 80
-step = 10
+lr = 160
+step = 20
 title = ['(a) stage 0', '(b) stage 2', '(c) stage 3', '(d) stage 4',
          '(e) stage 5', '(f) stage 6', '(g) stage 7', '(h) stage 8',
          '(i) stage 9']
