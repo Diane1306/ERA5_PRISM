@@ -39,17 +39,26 @@ for yl in range(len_year):
     DamDayann_states[yl, :] = np.array(
         [np.nanmean(np.where(mdmask_sub[ii], DamDayann[yl, :, :], np.nan)) for ii in range(len(mdmask_sub))])
 
-X = np.linspace(1981, 2020, len_year)
 slope = []
 pvalue = []
-for ri in range(len(mdmask_sub)):
-    flag = ~np.isnan(DamDayann_states[:, ri])
-    if len(X[flag]):
-        r = stats.theilslopes(DamDayann_states[:, ri][flag], X[flag], alpha=0.95)
-        slope.append(r[0])
+X = np.linspace(1981, 2020, len_year)
+# DamDayann_slope = np.load(work_dir + f'var/Cherry_DamDayann_slope.npy')
+# DamDayann_pvalue = np.load(work_dir + f'var/Cherry_DamDayann_pvalue.npy')
+# for ii in range(len(mdmask_sub)):
+#     slope.append(np.nanmean(np.where(mdmask_sub[ii], DamDayann_slope[:, :], np.nan)))
+#     pvalue.append(np.nanmean(np.where(mdmask_sub[ii], DamDayann_pvalue[:, :], np.nan)))
 
-        result = mk.original_test(DamDayann_states[:, ri][flag])
-        pvalue.append(result.p)
+trend = []
+for ri in range(len(mdmask_sub)):
+    # flag = ~np.isnan(DamDayann_states[:, ri])
+    # if len(X[flag]):
+    #     result = mk.original_test(DamDayann_states[:, ri][flag], alpha=0.05)
+    #     slope.append(result.slope)
+    #     pvalue.append(result.p)
+    result = mk.original_test(np.nan_to_num(DamDayann_states[:, ri], nan=0), alpha=0.05)
+    slope.append(result.slope)
+    pvalue.append(result.p)
+    trend.append(result.trend)
 
 fig, axs = plt.subplots(3, 2, sharex=True, sharey=True, figsize=(12, 7))
 yl =0
@@ -62,6 +71,7 @@ for i in range(len(mdmask_sub)):
     ax.text(.01, .9, f'mean = {np.nanmean(DamDayann_states[:, i]):.2f}', fontsize=15, transform=ax.transAxes)
     ax.text(.01, .8, f'std = {np.nanstd(DamDayann_states[:, i]):.2f}', fontsize=15, transform=ax.transAxes)
     ax.text(.01, .7, f'trend = {slope[i]:.2f} (p={pvalue[i]:.4f})', fontsize=15,transform=ax.transAxes)
+    # ax.text(.01, .7, f'trend = {trend[i]}', fontsize=15, transform=ax.transAxes)
     ax.text(.99, .9, f'{region[i]}', fontsize=16, fontweight='bold', horizontalalignment='right',
             transform=ax.transAxes)
     #     plt.grid()

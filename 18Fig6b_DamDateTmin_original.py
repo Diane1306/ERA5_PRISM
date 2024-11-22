@@ -32,21 +32,21 @@ SEmask = np.where(np.logical_or(mdmask['VA'], mdmask['NC']), 1, 0)
 mdmask_sub = [NWmask, SWmask, NCmask, Cmask, NEmask, SEmask]
 region = ['Northern Great Plains', 'Southern Great Plains', 'Upper Midwest', 'Ohio Valley', 'NY-PA', 'VA-NC']
 
-def trend(slope, pvalue):
+def get_trend(slope, pvalue):
     if pvalue>=.05:
-        if slope<-0.0001:
+        if slope<0:
             return 'b', '-'
-        elif slope>0.0001:
+        elif slope>0:
             return 'r', '+'
         else:
-            return "k"," "
+            return 'k', ' '
     elif pvalue < .05:
-        if slope<-0.0001:
+        if slope<0:
             return 'b', '-*'
-        elif slope>0.0001:
+        elif slope > 0:
             return 'r', '+*'
         else:
-            return "k"," "
+            return 'k', ' '
 
 len_year = 40
 TminDamStage = np.load(work_dir + f'var/Cherry_TminDamStage.npy')
@@ -116,10 +116,10 @@ for i in range(len(mdmask_sub)):
         axx.text(X[si] - .15, DamDateStage_states_sum[si, i] + 20, int(DamYearCount[si, i]), color='k', fontsize=10,
                  fontweight='bold')
         if (not np.isnan(slope_tmin[si, i])) and si > 0:
-            c, s = trend(slope_tmin[si, i], pvalue_tmin[si, i])
+            c, s = get_trend(slope_tmin[si, i], pvalue_tmin[si, i])
             ax.text(X[si] - .15, TminDamStage_states_mean[si, i], s, color=c, fontsize=15, fontweight='bold')
         if not np.isnan(slope_date[si, i]):
-            c, s = trend(slope_date[si, i], pvalue_date[si, i])
+            c, s = get_trend(slope_date[si, i], pvalue_date[si, i])
             axx.text(X[si] - .15, DamDateStage_states_sum[si, i], s, color=c, fontsize=15, fontweight='bold')
 
     ax.text(.99, .9, f'{region[i]}', fontsize=16, fontweight='bold', horizontalalignment='right',
