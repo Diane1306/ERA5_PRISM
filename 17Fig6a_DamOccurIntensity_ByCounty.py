@@ -45,6 +45,12 @@ def trend(slope, pvalue):
             return 'r', '+*'
 
 len_year = 40
+DamDayann = np.load(work_dir + f'var/Cherry_DamDayann.npy')
+DamDayann_states = np.zeros((len_year, len(mdmask_sub)))
+for yl in range(len_year):
+    DamDayann_states[yl, :] = np.array(
+        [np.nanmean(np.where(mdmask_sub[ii], DamDayann[yl, :, :], np.nan)) for ii in range(len(mdmask_sub))])
+
 DamDayStage = np.load(work_dir + f'var/Cherry_DamDayStage.npy')
 DamDayStage_states = np.zeros((len_year, 9, len(mdmask_sub)))
 for yl in range(len_year):
@@ -60,6 +66,12 @@ for yl in range(len_year):
         DamMeanStage_states[yl, st, :] = np.array(
             [np.nanmean(np.where(mdmask_sub[ii], DamMeanStage[yl, st, :, :], np.nan)) for ii in range(len(mdmask_sub))])
 DamMeanStage_states_sum = np.nanmean(DamMeanStage_states, axis=0)
+
+DamMeanann = np.nansum(DamDayStage*DamMeanStage, axis=1) / np.nansum(DamDayStage, axis=1)
+DamMeanann_states = np.zeros((len_year, len(mdmask_sub)))
+for yl in range(len_year):
+    DamMeanann_states[yl, :] = np.array(
+        [np.nanmean(np.where(mdmask_sub[ii], DamMeanann[yl, :, :], np.nan)) for ii in range(len(mdmask_sub))])
 
 slope_occur = np.zeros((9, len(mdmask_sub))) * np.nan
 slope_inten = np.zeros((9, len(mdmask_sub))) * np.nan
@@ -90,9 +102,21 @@ fig, axs = plt.subplots(2, 2, sharex=True, sharey=True, figsize=(13, 5))
 for i in range(len(mdmask_sub)):
     ax = plt.subplot(2, 2, i + 1)
     plt.xticks(X, ['0', '2', '3', '4', '5', '6', '7', '8', '9'], fontsize=15)
-    ax.bar(X - .2, DamDayStage_states_mean[:, i], width=.4, facecolor='springgreen', label='Frequency')
+    ax.bar(X - .2, DamDayStage_states_mean[:, i], width=.4, facecolor='grey', label='Frequency')
+    ax.text(.01, .9, f'mean = {np.nanmean(DamDayann_states[:, i]):.2f}', fontsize=15, transform=ax.transAxes,
+            color='grey')
+    ax.text(.01, .8, f'std = {np.nanstd(DamDayann_states[:, i]):.2f}', fontsize=15, transform=ax.transAxes,
+            color='grey')
+
     axx = ax.twinx()
     axx.bar(X + .2, DamMeanStage_states_sum[:, i], width=.4, facecolor='green', label='Severity')
+    axx.text(.99, .9, f'mean = {np.nanmean(DamMeanann_states[:, i]):.2f}', fontsize=15, transform=ax.transAxes,
+             horizontalalignment='right',
+             color='green')
+    axx.text(.99, .8, f'std = {np.nanstd(DamMeanann_states[:, i]):.2f}', fontsize=15, transform=ax.transAxes,
+             horizontalalignment='right',
+             color='green')
+
     for si in range(9):
         ax.text(X[si] - .35, DamDayStage_states_mean[si, i] + 0.3, int(DamYearCount[si, i]), color='k', fontsize=10,
                 fontweight='bold')
@@ -106,12 +130,12 @@ for i in range(len(mdmask_sub)):
     axx.set_ylim(0, 1)
     ax.set_xlim(-1, 9)
     axx.set_xlim(-1, 9)
-    ax.text(.99, .9, f'{region[i]}', fontsize=16, fontweight='bold', horizontalalignment='right',
+    ax.text(.5, .9, f'{region[i]}', fontsize=15, fontweight='bold', horizontalalignment='center',
             transform=ax.transAxes)
     if not i % 2:
         axx.set_yticks([])
         ax.set_yticks([0, 1, 2, 3, 4])
-        ax.set_yticklabels([0, 1, 2, 3, 4], fontsize=15, color='springgreen')
+        ax.set_yticklabels([0, 1, 2, 3, 4], fontsize=15, color='grey')
         ax.set_ylabel('Damage days', fontsize=15)
     else:
         # ax.set_yticks([])
@@ -119,10 +143,10 @@ for i in range(len(mdmask_sub)):
         axx.set_yticklabels([0.0, 0.2, 0.4, 0.6, 0.8, 1.0], fontsize=15, color='green')
         axx.set_ylabel('Damage percent', fontsize=15)
     if i == 2:
-        ax.legend(loc='upper left', fontsize=15, frameon=False)
+        # ax.legend(loc='upper left', fontsize=15, frameon=False)
         ax.set_xlabel('Phenological Stages', fontsize=15)
     if i == 3:
-        axx.legend(loc='upper left', fontsize=15, frameon=False)
+        # axx.legend(loc='upper left', fontsize=15, frameon=False)
         ax.set_xlabel('Phenological Stages', fontsize=15)
 
 plt.subplots_adjust(bottom=0.02, top=.98, left=0.02, right=.98,
